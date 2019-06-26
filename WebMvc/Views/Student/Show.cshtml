@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Show</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+</head>
+<body>
+    <div class="asds">
+        <table class="table-bordered table">
+            <tr class="asd">
+                <td>姓名:</td>
+                <td><input id="Name0" type="text" /></td>
+            </tr>
+            <tr class="asd">
+                <td>年龄:</td>
+                <td><input id="Age0" type="text" /></td>
+            </tr>
+            <tr class="asd">
+                <td>下拉:</td>
+                <td>
+                    <select id="qwe0">
+                        <option id="Select0">周一</option>
+                        <option id="Select1">周二</option>
+                        <option id="Select2">周三</option>
+                        <option id="Select3">周四</option>
+                    </select>
+                </td>
+            </tr>
+            @*<tr>
+            <td><input type="submit" value="提交"/></td>
+        </tr>*@
+
+        </table>
+        <div id="divData">
+
+        </div>
+        <input type="button" value="提交" onclick="Btn()" />
+        <input type="button" value="添加" onclick="Add()" />
+    </div>
+</body>
+</html>
+<script>
+        var a = 0;
+    function Add() {
+        a++;
+        var div = '<div class="asds"><table class="table-bordered table">' +
+            '<tr class="asd">' +
+            '<td>姓名:</td>' +
+            '<td><input id="Name' + a + '" type="text" /></td>' +
+            '</tr>' +
+            '<tr class="asd">' +
+            '<td>年龄:</td>' +
+            '<td><input id="Age' + a + '" type="text" /></td>' +
+            '</tr>' +
+            '<tr class="asd">'+
+                '<td>下拉:</td>'+
+                '<td>'+
+                    '<select class="ss" id="qwe'+a+'">'+
+                        '<option id="Select0" onclick="">周一</option>'+
+                        '<option id="Select1">周二</option>'+
+                        '<option id="Select2">周三</option>'+
+                        '<option id="Select3">周四</option>'+
+                    '</select>'+
+                '</td>'+
+            '</tr>'+
+            '</table></div>';
+        $("#divData").append(div);
+        
+        }
+    function Btn() {
+        var obj = [];
+        $(".asds").each(function (i, v) {
+            console.log(i);
+            var name = $("#Name" + i).val();
+            var age = $("#Age" + i).val();
+            var select = $("#qwe" + i + " option:selected");
+            var s = select.text();
+            alert(s);
+                obj.push({ Name: name, Age: age, Select: select });
+        })
+        
+        
+        //var o = {
+        //    Name: $("#Name0").val(),
+        //    Age : $("#Age0").val()
+        //};
+        console.log(obj);
+    }
+</script>

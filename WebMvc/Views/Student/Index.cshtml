@@ -1,0 +1,145 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    @*<script src="~/Scripts/axios.js"></script>
+        <script src="~/Scripts/Vue-2.6.10.js"></script>*@
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style>
+        h2 {
+            text-align: center;
+            background-color: aqua;
+            height: 100px;
+            line-height: 100px;
+        }
+
+        .ass {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>vue.js 无刷新的增删改查</h2>
+    </div>
+    <div>
+        <span>姓名:</span><input type="text" id="name" @*v-model="sad"*@ />
+        <input type="button" value="搜索" class="btn-danger btn" onclick="getSearch()" @*v-on:click="search(sad)"*@ style="margin-left:20px"/>
+        <input type="button" onclick="location.href='/Student/Add'" value="添加学生信息" class="btn btn-danger" style="margin-right:10px"/>
+        <table class="table-bordered table">
+            <tr class="ass">
+                <td>学生编号</td>
+                <td>学号</td>
+                <td>学生姓名</td>
+                <td>班级号:</td>
+                <td>操作</td>
+            </tr>
+            <tbody id="divData">
+                @*<tr v-for="(student,key,index) in StudentList">
+                    <td>{{student.studentID}}</td>
+                    <td>{{student.number}}</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.classID}}</td>
+                    <td><a href="#" @@click="delStu(student.StudentID)">删除</a></td>
+                </tr>*@
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+<script>
+    //var a = new Vue({
+    //    el: "#divData",
+    //    data: {
+    //        StudentList: []
+    //    },
+    //    mounted() {
+    //            this.GetAllStudent();
+    //        },
+    //    methods: {
+    //        GetAllStudent: function () {
+    //            axios.get("http://localhost:53520/Service1.svc/GetStudents?jsoncallback=?").then((respone) => {
+    //                console.log(respone);
+    //                this.StudentList = [];
+    //                for (var i = 0; i < respone.data.length; i++) {
+    //                    this.StudentList.push(respone.data[i]);
+    //                    console.log(respone.data[i]);
+    //                }
+    //            })
+    //        }
+    //    }
+    //    });
+    $(function () {
+        $.ajax({
+            url: "http://localhost:55113//Service1.svc/GetStudents?jsoncallback=?&name=" + "",
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "jsonp",
+            success: function (data) {
+                console.log(data);
+                $("#divData").empty();
+                $(data.d).each(function () {
+                    var line = '<tr>' +
+                        '<td>' + this.StudentID + '</td>' +
+                        '<td>' + this.Number + '</td>' +
+                        '<td>' + this.Name + '</td>' +
+                        '<td>' + this.ClassID + '</td>' +
+                        '<td><a href="#" onclick="delStu('+this.StudentID+')">删除</a>丨<a href="#" onclick="uptStu('+this.StudentID+')">修改</a></td>' +
+                        '</tr >';
+                    $("#divData").append(line);
+                })
+            }
+        })
+    })
+    function delStu(id) {
+        if (confirm("确认删除吗?")) {
+            $.ajax({
+                url: "http://localhost:55113//Service1.svc/DelStudent?jsoncallback=?&id=" + id,
+                type: "GET",
+                processData: true,
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.d > 0) {
+                        alert("删除成功!");
+                        location.href = "/Student/Index";
+                    }
+            }
+        })
+        }
+    }
+    function getSearch() {
+        $.ajax({
+            url: "http://localhost:55113//Service1.svc/GetStudents?jsoncallback=?&name=" + $("#name").val(),
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            //dataType: "jsonp",
+            success: function (data) {
+                console.log(data);
+                $("#divData").empty();
+                $(data.d).each(function () {
+                    var line = '<tr>' +
+                        '<td>' + this.StudentID + '</td>' +
+                        '<td>' + this.Number + '</td>' +
+                        '<td>' + this.Name + '</td>' +
+                        '<td>' + this.ClassID + '</td>' +
+                        '<td><a href="#" onclick="delStu('+this.StudentID+')">删除</a>丨<a href="#" onclick="uptStu('+this.StudentID+')">修改</a></td>' +
+                        '</tr >';
+                    $("#divData").append(line);
+                })
+            }
+        })
+    }
+    function uptStu(id) {
+        location.href = "/Student/Upt?id=" + id;
+    }
+</script>

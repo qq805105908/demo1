@@ -1,0 +1,85 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Upt</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <input type="hidden" value="@ViewBag.id" id="studentId"/>
+        <table class="table-bordered table">
+            <tr>
+                <td>学号:</td>
+                <td><input type="text" id="cardId" name="Number"/></td>
+            </tr>
+            <tr>
+                <td>姓名:</td>
+                <td><input type="text" id="stuName" name="Name" /></td>
+            </tr>
+            <tr>
+                <td>班级号:</td>
+                <td><input type="text" id="classId" name="ClassID" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="button" value="添加信息" id="BtnSave" class="btn-danger btn" /></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+<script>
+    $(function () {
+        var id = $("#studentId").val();
+        $.ajax({
+            url: "http://localhost:55113//Service1.svc/GetStudentsById?jsoncallback=?&id=" + id,
+            type: "get",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data.d);
+                $(data.d).each(function () {
+                $("#cardId").val(this.Number);
+                $("#stuName").val(this.Name);
+                $("#classId").val(this.ClassID)
+                })
+            }
+        })
+    })
+    $("#BtnSave").click(function () {
+        var obj = {
+         Number : $("#cardId").val(),
+         Name : $("#stuName").val(),
+         ClassID: $("#classId").val(),
+         StudentID: $("#studentId").val()
+        };
+        //var number = $("#cardId").val();
+        //var name = $("#stuName").val();
+        //var classID = $("#classId").val();
+        //obj.push({ number, name, classID });
+        $.ajax({
+            url: "http://localhost:55113//Service1.svc/UptStudent",
+            type: "POST",
+            //data: "{ Number:'" + number + "', Name:'" + name + '", ClassID:"' + classID + "'}",
+            //data: JSON.stringify({ Number: number, Name: name, ClassID: classID }),
+            //data: JSON.stringify("{ Number:'" + number + "', Name:'" + name + '", ClassID:"' + classID + "'}"),
+            data: JSON.stringify({student:obj}),
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            ////data: JSON.stringify(obj),
+            //data: { student: JSON.stringify(obj) },
+            success: function (data) {
+                if (data.d > 0) {
+                    alert("添加成功!");
+                    location.href = "/Student/Index";
+                }
+            }
+        })
+    })
+</script>

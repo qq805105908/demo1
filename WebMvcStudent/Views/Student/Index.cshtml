@@ -1,0 +1,78 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/js/Vue-2.6.10.js"></script>
+    <script src="~/js/axios.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <style>
+        h2 {
+            text-align: center;
+            background-color: aqua;
+            height: 100px;
+            line-height: 100px;
+        }
+
+        .ass {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>vue.js 无刷新的增删改查</h2>
+    </div>
+    <div>
+        <span>姓名:</span><input type="text" id="name" v-model="sad" />
+        <input type="button" value="搜索" class="btn-danger btn" v-on:click="search(sad)" />
+        <table class="table-bordered table">
+            <tr class="ass">
+                <td>学生编号</td>
+                <td>学号</td>
+                <td>学生姓名</td>
+                <td>班级号:</td>
+                <td>操作</td>
+            </tr>
+            <tbody id="divData">
+                <tr v-for="(student,key,index) in StudentList">
+                    <td>{{student.studentID}}</td>
+                    <td>{{student.number}}</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.classID}}</td>
+                    <td><a href="#" @@click="delStu(student.StudentID)">删除</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+<script>
+    var a = new Vue({
+        el: "#divData",
+        data: {
+            StudentList: []
+        },
+        mounted() {
+                this.GetAllStudent();
+            },
+        methods: {
+            GetAllStudent: function () {
+                axios.get("https://localhost:44367/api/Student").then((respone) => {
+                    console.log(respone);
+                    this.StudentList = [];
+                    for (var i = 0; i < respone.data.length; i++) {
+                        this.StudentList.push(respone.data[i]);
+                        console.log(respone.data[i]);
+                    }
+                })
+            }
+        }
+        });
+</script>
